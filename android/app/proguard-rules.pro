@@ -1,0 +1,11 @@
+-keepattributes *Annotation*,Signature
+-keep class com.arthenica.ffmpegkit.** { *; }
+-dontwarn com.arthenica.ffmpegkit.**
+-keep class com.antonkarpenko.** { *; }
+-dontwarn com.antonkarpenko.**
+-keep class io.flutter.app.** { *; }
+-keep class io.flutter.plugin.** { *; }
+-keep class io.flutter.util.** { *; }
+-keep class io.flutter.view.** { *; }
+-keep class io.flutter.** { *; }
+-keep class io.flutter.embedding.** { *; }

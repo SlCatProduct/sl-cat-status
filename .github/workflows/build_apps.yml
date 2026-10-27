@@ -1,0 +1,99 @@
+name: Build SL CAT Android APK & iOS App
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  build-android:
+    name: Build Android APK
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.24.5'
+          channel: 'stable'
+          cache: true
+
+      - name: Prepare Project & Build Android APK
+        run: |
+          # 1. Project Directory එක සොයාගැනීම
+          PROJECT_DIR=$(find . -name "pubspec.yaml" -not -path "*/.*" -exec dirname {} \; | head -n 1)
+          echo "Project directory found at: $PROJECT_DIR"
+          cd "$PROJECT_DIR"
+          
+          # 2. Android & iOS native scaffolding auto-generate කිරීම
+          flutter create . --org com.slcat --project-name sl_cat_status --platforms=android,ios
+          
+          # 3. FFmpegKit minSdk 24 සැකසීම
+          if [ -f "android/app/build.gradle" ]; then
+            sed -i 's/minSdkVersion flutter.minSdkVersion/minSdkVersion 24/g' android/app/build.gradle
+            sed -i 's/minSdkVersion = flutter.minSdkVersion/minSdkVersion = 24/g' android/app/build.gradle
+          fi
+          
+          # 4. Lint / Annotation check disable කිරීම (Gradle compilation smooth කිරීමට)
+          echo "android.lint.checkReleaseBuilds=false" >> android/gradle.properties
+          echo "android.lint.abortOnError=false" >> android/gradle.properties
+          
+          # 5. Dependencies ලබාගැනීම
+          flutter pub get
+          
+          # 6. Release APK build කිරීම
+          flutter build apk --release --no-tree-shake-icons
+          
+          # 7. Output APK artifact directory එකට copy කිරීම
+          mkdir -p $GITHUB_WORKSPACE/output
+          cp build/app/outputs/flutter-apk/app-release.apk $GITHUB_WORKSPACE/output/SL_CAT_PureStatus.apk
+
+      - name: Upload Android APK Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: SL_CAT_PureStatus_Android_APK
+          path: output/SL_CAT_PureStatus.apk
+
+  build-ios:
+    name: Build iOS Bundle (macOS Runner)
+    runs-on: macos-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.24.5'
+          channel: 'stable'
+          cache: true
+
+      - name: Prepare Project & Build iOS
+        run: |
+          PROJECT_DIR=$(find . -name "pubspec.yaml" -not -path "*/.*" -exec dirname {} \; | head -n 1)
+          echo "Project directory found at: $PROJECT_DIR"
+          cd "$PROJECT_DIR"
+          
+          flutter create . --org com.slcat --project-name sl_cat_status --platforms=android,ios
+          flutter pub get
+          
+          flutter build ios --release --no-codesign --no-tree-shake-icons
+          
+          mkdir -p $GITHUB_WORKSPACE/output/Payload
+          cp -r build/ios/iphoneos/Runner.app $GITHUB_WORKSPACE/output/Payload/
+          cd $GITHUB_WORKSPACE/output
+          zip -r SL_CAT_PureStatus_iOS.ipa Payload
+
+      - name: Upload iOS App Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: SL_CAT_PureStatus_iOS_IPA
+          path: output/SL_CAT_PureStatus_iOS.ipa
