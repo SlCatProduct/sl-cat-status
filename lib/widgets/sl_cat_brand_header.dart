@@ -12,16 +12,14 @@ class SlCatBrandHeader extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Container(
-            padding: const EdgeInsets.all(6),
+            width: 34,
+            height: 34,
             decoration: BoxDecoration(
-              gradient: const LinearGradient(
-                colors: [Color(0xFF00F0FF), Color(0xFF7928CA)],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
               borderRadius: BorderRadius.circular(10),
+              border: Border.all(color: const Color(0xFF00F0FF).withOpacity(0.5), width: 1.2),
             ),
-            child: const Icon(Icons.pets, color: Colors.white, size: 20),
+            clipBehavior: Clip.antiAlias,
+            child: Image.asset('assets/images/app_logo.png', fit: BoxFit.cover),
           ),
           const SizedBox(width: 10),
           RichText(
@@ -77,22 +75,20 @@ class SlCatBrandHeader extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Container(
-                padding: const EdgeInsets.all(12),
+                width: 58,
+                height: 58,
                 decoration: BoxDecoration(
-                  gradient: const LinearGradient(
-                    colors: [Color(0xFF00F0FF), Color(0xFF7928CA)],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
                   borderRadius: BorderRadius.circular(18),
+                  border: Border.all(color: const Color(0xFF00F0FF).withOpacity(0.5), width: 1.5),
                   boxShadow: [
                     BoxShadow(
-                      color: const Color(0xFF00F0FF).withOpacity(0.4),
-                      blurRadius: 16,
+                      color: const Color(0xFF00F0FF).withOpacity(0.35),
+                      blurRadius: 18,
                     ),
                   ],
                 ),
-                child: const Icon(Icons.pets, color: Colors.white, size: 32),
+                clipBehavior: Clip.antiAlias,
+                child: Image.asset('assets/images/app_logo.png', fit: BoxFit.cover),
               ),
               const SizedBox(width: 16),
               Column(

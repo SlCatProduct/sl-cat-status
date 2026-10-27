@@ -46,3 +46,4 @@ flutter:
   uses-material-design: true
   assets:
     - assets/images/sl_cat_watermark.png
+    - assets/images/app_logo.png
