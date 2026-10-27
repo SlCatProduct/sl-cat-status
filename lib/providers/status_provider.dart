@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import '../models/compression_preset.dart';
@@ -73,6 +74,11 @@ class StatusProvider with ChangeNotifier {
 
   Future<bool> pickVideo() async {
     try {
+      if (kIsWeb) {
+        _errorMessage = 'Video compression requires native device hardware. Please run the native SL CAT App on your iPhone or Android!';
+        notifyListeners();
+        return false;
+      }
       final XFile? file = await _picker.pickVideo(source: ImageSource.gallery);
       if (file == null) return false;
 

@@ -198,6 +198,17 @@ class HomeScreen extends StatelessWidget {
                     context,
                     MaterialPageRoute(builder: (_) => const VideoCompressScreen()),
                   );
+                } else if (!picked && context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      backgroundColor: Colors.redAccent,
+                      behavior: SnackBarBehavior.floating,
+                      content: Text(
+                        provider.errorMessage ?? 'Please install the native SL CAT App on your device for hardware video compression.',
+                        style: GoogleFonts.inter(),
+                      ),
+                    ),
+                  );
                 }
               },
             ),
@@ -231,6 +242,17 @@ class HomeScreen extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (_) => const VideoSplitterScreen()),
+                  );
+                } else if (!picked && context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      backgroundColor: Colors.redAccent,
+                      behavior: SnackBarBehavior.floating,
+                      content: Text(
+                        provider.errorMessage ?? 'Please install the native SL CAT App on your device for hardware video compression.',
+                        style: GoogleFonts.inter(),
+                      ),
+                    ),
                   );
                 }
               },
