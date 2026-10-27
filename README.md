@@ -1,6 +1,7 @@
 # 🐱 SL CAT: Pure Status & Anti-Blur Optimizer
 > **ByeBye Blur Status for WhatsApp, Instagram Stories, and Facebook (iOS & Android)**  
-> Brand: **SL CAT**
+> Brand: **SL CAT**  
+> 🌐 **Live Web PWA:** [https://slcatproduct.github.io/sl-cat-status/](https://slcatproduct.github.io/sl-cat-status/)
 
 ---
 
